@@ -1,7 +1,7 @@
-import POSDashboard from './POSDashboard'
+import POSDashboard from "./POSDashboard";
 
 function App() {
-  return <POSDashboard />
+  return <POSDashboard />;
 }
 
-export default App
+export default App;
