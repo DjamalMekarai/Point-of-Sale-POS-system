@@ -140,7 +140,7 @@ export default function POSDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredProducts = teaProducts.filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
