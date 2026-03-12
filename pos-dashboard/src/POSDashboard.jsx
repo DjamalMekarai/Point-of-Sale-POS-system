@@ -24,7 +24,8 @@ const categories = [
     items: 50,
     status: "Available",
     warning: false,
-    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&h=300&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&h=300&fit=crop&auto=format",
   },
   {
     id: "tea",
@@ -32,7 +33,8 @@ const categories = [
     items: 20,
     status: "Available",
     warning: false,
-    image: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop&auto=format",
   },
   {
     id: "snack",
@@ -40,56 +42,262 @@ const categories = [
     items: 10,
     status: "Need to re-stock",
     warning: true,
-    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop&auto=format",
   },
 ];
 
 const productsByCategory = {
   coffee: [
-    { id: "espresso",       name: "Espresso",        price: 4.2,  image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop&auto=format" },
-    { id: "cappuccino",     name: "Cappuccino",       price: 3.3,  image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format" },
-    { id: "latte",          name: "Latte",            price: 4.0,  image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format" },
-    { id: "americano",      name: "Americano",        price: 4.0,  image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format" },
-    { id: "mocha",          name: "Mocha",            price: 4.0,  image: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format" },
-    { id: "iced-coffee",    name: "Iced Coffee Milk", price: 3.8,  image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&h=300&fit=crop&auto=format" },
-    { id: "cold-brew",      name: "Cold Brew",        price: 4.0,  image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format" },
-    { id: "flat-white",     name: "Flat White",       price: 3.8,  image: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=300&h=300&fit=crop&auto=format" },
-    { id: "caramel-mac",    name: "Caramel Mac",      price: 4.0,  image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format" },
-    { id: "salted-caramel", name: "Salted Caramel",   price: 4.2,  image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format" },
-    { id: "hazelnut-latte", name: "Hazelnut Latte",   price: 4.0,  image: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format" },
-    { id: "pour-over",      name: "Pour Over",        price: 4.0,  image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=300&fit=crop&auto=format" },
+    {
+      id: "espresso",
+      name: "Espresso",
+      price: 4.2,
+      image:
+        "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "cappuccino",
+      name: "Cappuccino",
+      price: 3.3,
+      image:
+        "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "latte",
+      name: "Latte",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "americano",
+      name: "Americano",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "mocha",
+      name: "Mocha",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "iced-coffee",
+      name: "Iced Coffee Milk",
+      price: 3.8,
+      image:
+        "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "cold-brew",
+      name: "Cold Brew",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "flat-white",
+      name: "Flat White",
+      price: 3.8,
+      image:
+        "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "caramel-mac",
+      name: "Caramel Mac",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "salted-caramel",
+      name: "Salted Caramel",
+      price: 4.2,
+      image:
+        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "hazelnut-latte",
+      name: "Hazelnut Latte",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "pour-over",
+      name: "Pour Over",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=300&fit=crop&auto=format",
+    },
   ],
   tea: [
-    { id: "green-jasmine",   name: "Green Jasmine Tea",  price: 4.0,  image: "https://images.unsplash.com/photo-1556881286-fc6915169721?w=300&h=300&fit=crop&auto=format" },
-    { id: "earl-grey",       name: "Earl Grey",          price: 4.5,  image: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format" },
-    { id: "chamomile",       name: "Chamomile",          price: 4.0,  image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300&h=300&fit=crop&auto=format" },
-    { id: "peppermint",      name: "Peppermint Tea",     price: 4.0,  image: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=300&h=300&fit=crop&auto=format" },
-    { id: "rooibos",         name: "Rooibos Chai",       price: 4.0,  image: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop&auto=format" },
-    { id: "hibiscus",        name: "Hibiscus Berry Tea", price: 3.8,  image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&h=300&fit=crop&auto=format" },
-    { id: "darjeeling",      name: "Darjeeling",         price: 4.0,  image: "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=300&h=300&fit=crop&auto=format" },
-    { id: "genmaicha",       name: "Genmaicha",          price: 3.8,  image: "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format" },
-    { id: "sencha",          name: "Sencha",             price: 4.0,  image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format" },
-    { id: "white-peony",     name: "White Peony",        price: 4.2,  image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format" },
-    { id: "lemon-ginger",    name: "Lemon Ginger",       price: 3.5,  image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=300&fit=crop&auto=format" },
-    { id: "moroccan-mint",   name: "Moroccan Mint",      price: 4.0,  image: "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format" },
-    { id: "lapsang",         name: "Lapsang Souchong",   price: 4.5,  image: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format" },
-    { id: "dragon-well",     name: "Dragon Well",        price: 5.0,  image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format" },
-    { id: "lemongrass",      name: "Lemongrass Tea",     price: 3.5,  image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format" },
+    {
+      id: "green-jasmine",
+      name: "Green Jasmine Tea",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1556881286-fc6915169721?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "earl-grey",
+      name: "Earl Grey",
+      price: 4.5,
+      image:
+        "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "chamomile",
+      name: "Chamomile",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "peppermint",
+      name: "Peppermint Tea",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "rooibos",
+      name: "Rooibos Chai",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "hibiscus",
+      name: "Hibiscus Berry Tea",
+      price: 3.8,
+      image:
+        "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "darjeeling",
+      name: "Darjeeling",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "genmaicha",
+      name: "Genmaicha",
+      price: 3.8,
+      image:
+        "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "sencha",
+      name: "Sencha",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "white-peony",
+      name: "White Peony",
+      price: 4.2,
+      image:
+        "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "lemon-ginger",
+      name: "Lemon Ginger",
+      price: 3.5,
+      image:
+        "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "moroccan-mint",
+      name: "Moroccan Mint",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "lapsang",
+      name: "Lapsang Souchong",
+      price: 4.5,
+      image:
+        "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "dragon-well",
+      name: "Dragon Well",
+      price: 5.0,
+      image:
+        "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "lemongrass",
+      name: "Lemongrass Tea",
+      price: 3.5,
+      image:
+        "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format",
+    },
   ],
   snack: [
-    { id: "croissant",   name: "Butter Croissant",  price: 3.5,  image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=300&fit=crop&auto=format" },
-    { id: "muffin",      name: "Blueberry Muffin",  price: 3.0,  image: "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=300&h=300&fit=crop&auto=format" },
-    { id: "brownie",     name: "Chocolate Brownie", price: 3.5,  image: "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=300&h=300&fit=crop&auto=format" },
-    { id: "cookie",      name: "Oat Raisin Cookie", price: 2.5,  image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=300&h=300&fit=crop&auto=format" },
-    { id: "banana-bread",name: "Banana Bread",      price: 4.0,  image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=300&h=300&fit=crop&auto=format" },
-    { id: "granola-bar", name: "Granola Bar",        price: 2.8,  image: "https://images.unsplash.com/photo-1490567674331-8f0605bc5f53?w=300&h=300&fit=crop&auto=format" },
+    {
+      id: "croissant",
+      name: "Butter Croissant",
+      price: 3.5,
+      image:
+        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "muffin",
+      name: "Blueberry Muffin",
+      price: 3.0,
+      image:
+        "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "brownie",
+      name: "Chocolate Brownie",
+      price: 3.5,
+      image:
+        "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "cookie",
+      name: "Oat Raisin Cookie",
+      price: 2.5,
+      image:
+        "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "banana-bread",
+      name: "Banana Bread",
+      price: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=300&h=300&fit=crop&auto=format",
+    },
+    {
+      id: "granola-bar",
+      name: "Granola Bar",
+      price: 2.8,
+      image:
+        "https://images.unsplash.com/photo-1490567674331-8f0605bc5f53?w=300&h=300&fit=crop&auto=format",
+    },
   ],
 };
 
 const TAX_RATE = 0.1;
 const ORDER_TYPES = ["Dine In", "Take Away", "Order Online"];
 const TABLES = ["B12 - Indoor", "A01 - Indoor", "C04 - Outdoor", "D09 - VIP"];
-const CUSTOMIZATIONS = ["Regular", "Medium", "Large", "Less Sugar", "No Sugar", "Extra Shot"];
+const CUSTOMIZATIONS = [
+  "Regular",
+  "Medium",
+  "Large",
+  "Less Sugar",
+  "No Sugar",
+  "Extra Shot",
+];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -103,8 +311,8 @@ export default function POSDashboard() {
 
   const sidebarOpen = cartItems.length > 0;
 
-  const currentProducts = (productsByCategory[activeCategory] || []).filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const currentProducts = (productsByCategory[activeCategory] || []).filter(
+    (p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // ── Cart helpers ──
@@ -112,7 +320,9 @@ export default function POSDashboard() {
     setCartItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
       if (existing) {
-        return prev.map((i) => i.id === product.id ? { ...i, qty: i.qty + 1 } : i);
+        return prev.map((i) =>
+          i.id === product.id ? { ...i, qty: i.qty + 1 } : i,
+        );
       }
       return [...prev, { ...product, qty: 1, customization: "Medium" }];
     });
@@ -121,8 +331,8 @@ export default function POSDashboard() {
   const changeQty = (id, delta) => {
     setCartItems((prev) =>
       prev
-        .map((i) => i.id === id ? { ...i, qty: i.qty + delta } : i)
-        .filter((i) => i.qty > 0)
+        .map((i) => (i.id === id ? { ...i, qty: i.qty + delta } : i))
+        .filter((i) => i.qty > 0),
     );
   };
 
@@ -137,15 +347,25 @@ export default function POSDashboard() {
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-sage-800 flex items-center justify-center">
-              <span className="text-white text-xs font-extrabold tracking-tight">GG</span>
+              <span className="text-white text-xs font-extrabold tracking-tight">
+                GG
+              </span>
             </div>
             <div className="leading-[1.2]">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-800">Green</p>
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-800">Grounds</p>
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-500">Coffee</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-800">
+                Green
+              </p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-800">
+                Grounds
+              </p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-sage-500">
+                Coffee
+              </p>
             </div>
           </div>
-          <span className="text-sm text-sage-600 font-medium hidden sm:inline">Thursday, 23 June</span>
+          <span className="text-sm text-sage-600 font-medium hidden sm:inline">
+            Thursday, 23 June
+          </span>
         </div>
 
         <div className="flex items-center gap-5">
@@ -157,7 +377,9 @@ export default function POSDashboard() {
           </button>
           <div className="relative cursor-pointer">
             <Bell size={20} className="text-sage-700" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold leading-none">1</span>
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold leading-none">
+              1
+            </span>
           </div>
           <div className="flex items-center gap-2.5 bg-white border border-sage-200 rounded-2xl px-3 py-1.5 shadow-sm">
             <img
@@ -176,7 +398,9 @@ export default function POSDashboard() {
       {/* ── Body ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* ── Left Panel ── */}
-        <div className={`flex flex-col flex-1 overflow-hidden transition-all duration-300 ${sidebarOpen ? "min-w-0" : ""}`}>
+        <div
+          className={`flex flex-col flex-1 overflow-hidden transition-all duration-300 ${sidebarOpen ? "min-w-0" : ""}`}
+        >
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {/* Search */}
             <div className="flex items-center gap-3">
@@ -209,14 +433,24 @@ export default function POSDashboard() {
                     style={{ minHeight: "96px" }}
                   >
                     <div className="relative z-10">
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2.5 py-0.5 rounded-full mb-1.5
+                      <span
+                        className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2.5 py-0.5 rounded-full mb-1.5
                         ${cat.warning ? "bg-red-50 text-red-600 border border-red-200" : isActive ? "bg-white/20 text-white" : "bg-sage-50 text-sage-600 border border-sage-200"}
-                      `}>
+                      `}
+                      >
                         {cat.status}
                         {cat.warning && <AlertCircle size={9} />}
                       </span>
-                      <h3 className={`text-base font-bold leading-tight ${isActive ? "text-white" : "text-sage-900"}`}>{cat.name}</h3>
-                      <p className={`text-xs mt-0.5 ${isActive ? "text-white/70" : "text-sage-400"}`}>{cat.items} items</p>
+                      <h3
+                        className={`text-base font-bold leading-tight ${isActive ? "text-white" : "text-sage-900"}`}
+                      >
+                        {cat.name}
+                      </h3>
+                      <p
+                        className={`text-xs mt-0.5 ${isActive ? "text-white/70" : "text-sage-400"}`}
+                      >
+                        {cat.items} items
+                      </p>
                     </div>
                     <img
                       src={cat.image}
@@ -229,7 +463,9 @@ export default function POSDashboard() {
             </div>
 
             {/* Product Grid */}
-            <div className={`grid gap-3 ${sidebarOpen ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"}`}>
+            <div
+              className={`grid gap-3 ${sidebarOpen ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"}`}
+            >
               {currentProducts.map((product) => {
                 const inCart = cartItems.find((i) => i.id === product.id);
                 return (
@@ -246,8 +482,12 @@ export default function POSDashboard() {
                     </div>
                     <div className="flex items-end justify-between gap-1">
                       <div className="min-w-0">
-                        <h4 className="text-sm font-semibold text-sage-900 leading-tight truncate">{product.name}</h4>
-                        <p className="text-sm text-sage-500 mt-0.5">${product.price.toFixed(1)}</p>
+                        <h4 className="text-sm font-semibold text-sage-900 leading-tight truncate">
+                          {product.name}
+                        </h4>
+                        <p className="text-sm text-sage-500 mt-0.5">
+                          ${product.price.toFixed(1)}
+                        </p>
                       </div>
                       <button
                         onClick={() => addToCart(product)}
@@ -287,7 +527,9 @@ export default function POSDashboard() {
                       <ChevronLeft size={16} />
                     </button>
                     <div>
-                      <p className="text-xs text-sage-500 leading-none">Purchase Receipt</p>
+                      <p className="text-xs text-sage-500 leading-none">
+                        Purchase Receipt
+                      </p>
                       <p className="text-sm font-bold text-sage-900">#27362</p>
                     </div>
                   </div>
@@ -316,7 +558,9 @@ export default function POSDashboard() {
               <div className="px-5 py-3 border-b border-sage-100 flex-shrink-0">
                 <div className="flex gap-3">
                   <div className="flex-1 min-w-0">
-                    <label className="text-[10px] font-semibold text-sage-500 uppercase tracking-wider block mb-1">Customer name</label>
+                    <label className="text-[10px] font-semibold text-sage-500 uppercase tracking-wider block mb-1">
+                      Customer name
+                    </label>
                     <input
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
@@ -325,16 +569,23 @@ export default function POSDashboard() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <label className="text-[10px] font-semibold text-sage-500 uppercase tracking-wider block mb-1">Table</label>
+                    <label className="text-[10px] font-semibold text-sage-500 uppercase tracking-wider block mb-1">
+                      Table
+                    </label>
                     <div className="relative">
                       <select
                         value={table}
                         onChange={(e) => setTable(e.target.value)}
                         className="w-full appearance-none bg-white border border-sage-200 rounded-xl px-3 py-2 text-sm text-sage-900 outline-none focus:border-sage-500 transition-colors pr-7"
                       >
-                        {TABLES.map((t) => <option key={t}>{t}</option>)}
+                        {TABLES.map((t) => (
+                          <option key={t}>{t}</option>
+                        ))}
                       </select>
-                      <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sage-400 pointer-events-none" />
+                      <ChevronDown
+                        size={13}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sage-400 pointer-events-none"
+                      />
                     </div>
                   </div>
                 </div>
@@ -342,7 +593,9 @@ export default function POSDashboard() {
 
               {/* Order List */}
               <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3">
-                <p className="text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Order list</p>
+                <p className="text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">
+                  Order list
+                </p>
                 <AnimatePresence initial={false}>
                   {cartItems.map((item) => (
                     <motion.div
@@ -361,15 +614,23 @@ export default function POSDashboard() {
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start">
-                            <p className="text-sm font-semibold text-sage-900 leading-tight">{item.name}</p>
-                            <p className="text-sm font-bold text-sage-900 ml-2 flex-shrink-0">${(item.price * item.qty).toFixed(1)}</p>
+                            <p className="text-sm font-semibold text-sage-900 leading-tight">
+                              {item.name}
+                            </p>
+                            <p className="text-sm font-bold text-sage-900 ml-2 flex-shrink-0">
+                              ${(item.price * item.qty).toFixed(1)}
+                            </p>
                           </div>
-                          <p className="text-xs text-sage-400 mt-0.5">${item.price.toFixed(1)} x{item.qty}</p>
+                          <p className="text-xs text-sage-400 mt-0.5">
+                            ${item.price.toFixed(1)} x{item.qty}
+                          </p>
                           {/* Customization row */}
                           <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center gap-1.5">
                               <Receipt size={11} className="text-sage-400" />
-                              <span className="text-[11px] text-sage-500">{item.customization}</span>
+                              <span className="text-[11px] text-sage-500">
+                                {item.customization}
+                              </span>
                             </div>
                             {/* Qty stepper */}
                             <div className="flex items-center gap-2">
@@ -379,7 +640,9 @@ export default function POSDashboard() {
                               >
                                 <Minus size={11} />
                               </button>
-                              <span className="text-sm font-semibold text-sage-900 w-4 text-center">{item.qty}</span>
+                              <span className="text-sm font-semibold text-sage-900 w-4 text-center">
+                                {item.qty}
+                              </span>
                               <button
                                 onClick={() => changeQty(item.id, 1)}
                                 className="w-6 h-6 rounded-full border border-sage-300 flex items-center justify-center text-sage-600 hover:bg-sage-50 transition-colors"
@@ -398,7 +661,9 @@ export default function POSDashboard() {
               {/* Payment Summary + CTA */}
               <div className="px-5 pt-3 pb-5 border-t border-sage-100 flex-shrink-0 space-y-4">
                 <div>
-                  <p className="text-sm font-bold text-sage-900 mb-2">Payment Details</p>
+                  <p className="text-sm font-bold text-sage-900 mb-2">
+                    Payment Details
+                  </p>
                   <div className="space-y-1.5">
                     {[
                       { label: "Subtotal", value: subtotal },
@@ -406,12 +671,16 @@ export default function POSDashboard() {
                     ].map(({ label, value }) => (
                       <div key={label} className="flex justify-between text-sm">
                         <span className="text-sage-500">{label}</span>
-                        <span className="font-medium text-sage-800">${value.toFixed(1)}</span>
+                        <span className="font-medium text-sage-800">
+                          ${value.toFixed(1)}
+                        </span>
                       </div>
                     ))}
                     <div className="flex justify-between text-sm pt-1 border-t border-sage-100 mt-1">
                       <span className="font-bold text-sage-900">Total</span>
-                      <span className="font-bold text-sage-900">${total.toFixed(1)}</span>
+                      <span className="font-bold text-sage-900">
+                        ${total.toFixed(1)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -420,7 +689,9 @@ export default function POSDashboard() {
                   <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                     <ChevronRight size={18} className="text-white" />
                   </div>
-                  <span className="font-semibold text-base">Place Order  ${total.toFixed(1)}</span>
+                  <span className="font-semibold text-base">
+                    Place Order ${total.toFixed(1)}
+                  </span>
                   <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                     <ChevronRight size={18} className="text-white" />
                   </div>
