@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Receipt,
+  BarChart2,
 } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -301,7 +302,7 @@ const CUSTOMIZATIONS = [
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function POSDashboard() {
+export default function POSDashboard({ onNavigate }) {
   const [activeCategory, setActiveCategory] = useState("coffee");
   const [searchQuery, setSearchQuery] = useState("");
   const [cartItems, setCartItems] = useState([]);
@@ -392,6 +393,14 @@ export default function POSDashboard() {
               <p className="text-xs text-sage-500">Cashier</p>
             </div>
           </div>
+          {onNavigate && (
+            <button
+              onClick={() => onNavigate("admin")}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-sage-300 text-sage-700 hover:bg-sage-100 transition-colors"
+            >
+              <BarChart2 size={14} /> Analytics
+            </button>
+          )}
         </div>
       </header>
 

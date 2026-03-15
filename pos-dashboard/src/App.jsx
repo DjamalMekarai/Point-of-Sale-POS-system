@@ -1,7 +1,15 @@
+import { useState } from "react";
 import POSDashboard from "./POSDashboard";
+import AdminDashboard from "./AdminDashboard";
 
 function App() {
-  return <POSDashboard />;
+  const [view, setView] = useState("admin");
+
+  return view === "pos" ? (
+    <POSDashboard onNavigate={setView} />
+  ) : (
+    <AdminDashboard onNavigate={setView} />
+  );
 }
 
 export default App;
