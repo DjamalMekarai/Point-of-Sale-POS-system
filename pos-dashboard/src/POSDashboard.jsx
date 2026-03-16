@@ -302,7 +302,7 @@ const CUSTOMIZATIONS = [
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function POSDashboard({ onNavigate }) {
+export default function POSDashboard({ onNavigate, onLogout, user }) {
   const [activeCategory, setActiveCategory] = useState("coffee");
   const [searchQuery, setSearchQuery] = useState("");
   const [cartItems, setCartItems] = useState([]);
@@ -384,21 +384,29 @@ export default function POSDashboard({ onNavigate }) {
           </div>
           <div className="flex items-center gap-2.5 bg-white border border-sage-200 rounded-2xl px-3 py-1.5 shadow-sm">
             <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&auto=format"
-              alt="Samantha W"
+              src={user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&auto=format"}
+              alt={user?.name || "Staff"}
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="hidden sm:block leading-tight">
-              <p className="text-sm font-semibold text-sage-900">Samantha W</p>
-              <p className="text-xs text-sage-500">Cashier</p>
+              <p className="text-sm font-semibold text-sage-900">{user?.name || "Staff"}</p>
+              <p className="text-xs text-sage-500 capitalize">{user?.role === "admin" ? "Admin" : "Cashier"}</p>
             </div>
           </div>
-          {onNavigate && (
+          {onNavigate && user?.role === "admin" && (
             <button
               onClick={() => onNavigate("admin")}
               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-sage-300 text-sage-700 hover:bg-sage-100 transition-colors"
             >
               <BarChart2 size={14} /> Analytics
+            </button>
+          )}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 transition-colors"
+            >
+              Sign Out
             </button>
           )}
         </div>

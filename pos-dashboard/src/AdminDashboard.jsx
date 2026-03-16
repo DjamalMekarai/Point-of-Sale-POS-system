@@ -300,8 +300,12 @@ export default function AdminDashboard({ onNavigate, onLogout, user }) {
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="leading-tight hidden sm:block">
-              <p className="text-sm font-semibold text-sage-900">{user?.name || "Admin"}</p>
-              <p className="text-xs text-sage-500 capitalize">{user?.role || "admin"}</p>
+              <p className="text-sm font-semibold text-sage-900">
+                {user?.name || "Admin"}
+              </p>
+              <p className="text-xs text-sage-500 capitalize">
+                {user?.role || "admin"}
+              </p>
             </div>
           </div>
           {onNavigate && (
