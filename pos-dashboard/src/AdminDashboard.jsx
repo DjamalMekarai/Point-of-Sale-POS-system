@@ -237,7 +237,7 @@ function ScoreRing({ score = 98 }) {
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function AdminDashboard({ onNavigate }) {
+export default function AdminDashboard({ onNavigate, onLogout, user }) {
   const [timeFilter, setTimeFilter] = useState("Day");
   const [txnFilter, setTxnFilter] = useState("All");
   const [selected, setSelected] = useState({});
@@ -295,13 +295,17 @@ export default function AdminDashboard({ onNavigate }) {
           </div>
           <div className="flex items-center gap-2.5 bg-white border border-sage-200 rounded-2xl px-3 py-1.5 shadow-sm">
             <img
-              src="https://i.pravatar.cc/40?img=7"
-              alt="Adam S"
+              src={user?.avatar || "https://i.pravatar.cc/40?img=7"}
+              alt={user?.name || "Admin"}
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="leading-tight hidden sm:block">
-              <p className="text-sm font-semibold text-sage-900">Adam S</p>
-              <p className="text-xs text-sage-500">Admin</p>
+              <p className="text-sm font-semibold text-sage-900">
+                {user?.name || "Admin"}
+              </p>
+              <p className="text-xs text-sage-500 capitalize">
+                {user?.role || "admin"}
+              </p>
             </div>
           </div>
           {onNavigate && (
@@ -310,6 +314,14 @@ export default function AdminDashboard({ onNavigate }) {
               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-sage-300 text-sage-700 hover:bg-sage-100 transition-colors"
             >
               <LayoutGrid size={14} /> POS View
+            </button>
+          )}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 transition-colors"
+            >
+              Sign Out
             </button>
           )}
         </div>
