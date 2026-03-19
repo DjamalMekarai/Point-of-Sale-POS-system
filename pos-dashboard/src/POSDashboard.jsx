@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   Bell,
-  FileText,
   Plus,
   Minus,
   AlertCircle,
@@ -14,6 +13,9 @@ import {
   ChevronRight,
   Receipt,
   BarChart2,
+  X,
+  Printer,
+  CalendarClock,
 } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -300,6 +302,51 @@ const CUSTOMIZATIONS = [
   "Extra Shot",
 ];
 
+const INITIAL_ORDER_HISTORY = [
+  {
+    id: "ORD-27357",
+    ticketNumber: "#27357",
+    createdAt: "2026-03-19T07:10:00.000Z",
+    orderType: "Dine In",
+    customerName: "John Smith",
+    table: "A01 - Indoor",
+    subtotal: 12.6,
+    tax: 1.26,
+    total: 13.86,
+    items: [
+      { id: "latte", name: "Latte", qty: 2, price: 4.0, customization: "Medium" },
+      { id: "cookie", name: "Oat Raisin Cookie", qty: 1, price: 2.5, customization: "Regular" },
+    ],
+  },
+  {
+    id: "ORD-27358",
+    ticketNumber: "#27358",
+    createdAt: "2026-03-19T07:24:00.000Z",
+    orderType: "Take Away",
+    customerName: "Lia Thompson",
+    table: "-",
+    subtotal: 8.0,
+    tax: 0.8,
+    total: 8.8,
+    items: [
+      { id: "americano", name: "Americano", qty: 1, price: 4.0, customization: "Less Sugar" },
+      { id: "croissant", name: "Butter Croissant", qty: 1, price: 3.5, customization: "Regular" },
+    ],
+  },
+];
+
+const formatDateTime = (isoDate) => {
+  const date = new Date(isoDate);
+  return date.toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const createTicketNumber = () => `#${Math.floor(10000 + Math.random() * 90000)}`;
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function POSDashboard({ onNavigate, onLogout, user }) {
@@ -309,6 +356,11 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
   const [orderType, setOrderType] = useState("Dine In");
   const [customerName, setCustomerName] = useState("Muadz");
   const [table, setTable] = useState("B12 - Indoor");
+  const [orderHistory, setOrderHistory] = useState(INITIAL_ORDER_HISTORY);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(INITIAL_ORDER_HISTORY[0]?.id || null);
+  const [ticketOpen, setTicketOpen] = useState(false);
+  const [latestTicket, setLatestTicket] = useState(null);
 
   const sidebarOpen = cartItems.length > 0;
 
@@ -341,6 +393,196 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
+  const selectedOrder = orderHistory.find((order) => order.id === selectedOrderId) || null;
+
+  const handlePlaceOrder = () => {
+    if (!cartItems.length) return;
+
+    const ticketNumber = createTicketNumber();
+    const now = new Date().toISOString();
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      ticketNumber,
+      createdAt: now,
+      orderType,
+      customerName: customerName.trim() || "Walk-in",
+      table: orderType === "Dine In" ? table : "-",
+      subtotal,
+      tax,
+      total,
+      items: cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        customization: item.customization,
+      })),
+    };
+
+    setOrderHistory((prev) => [newOrder, ...prev]);
+    setSelectedOrderId(newOrder.id);
+    setLatestTicket(newOrder);
+    setTicketOpen(true);
+    setCartItems([]);
+  };
+
+  const printTicket = (order) => {
+    if (!order) return;
+    const ticketWindow = window.open("", "_blank", "width=380,height=640");
+    if (!ticketWindow) return;
+
+    const itemsHtml = order.items
+      .map(
+        (item) => `
+          <div class="item-row">
+            <div>
+              <p class="item-name">${item.name} x${item.qty}</p>
+              <p class="item-meta">${item.customization}</p>
+            </div>
+            <span class="item-price">$${(item.price * item.qty).toFixed(2)}</span>
+          </div>
+        `,
+      )
+      .join("");
+
+    ticketWindow.document.write(`
+      <html>
+        <head>
+          <title>Ticket ${order.ticketNumber}</title>
+          <style>
+            :root {
+              --bg: #f9f7e8;
+              --ink: #1f2f23;
+              --muted: #6e7f67;
+              --brand: #4c6b50;
+              --line: #ccd6c4;
+            }
+            * { box-sizing: border-box; }
+            @page { size: 80mm auto; margin: 10mm; }
+            body {
+              margin: 0;
+              background: var(--bg);
+              color: var(--ink);
+              font-family: "Segoe UI", Arial, sans-serif;
+              padding: 16px;
+            }
+            p, h1, h2 { margin: 0; }
+            .ticket {
+              border: 1px solid var(--line);
+              border-radius: 16px;
+              background: #fffef8;
+              padding: 14px;
+            }
+            .brand {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 10px;
+            }
+            .brand-badge {
+              width: 34px;
+              height: 34px;
+              border-radius: 10px;
+              background: var(--brand);
+              color: white;
+              font-weight: 800;
+              font-size: 13px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              letter-spacing: 0.4px;
+            }
+            .brand-name {
+              font-size: 18px;
+              font-weight: 800;
+              letter-spacing: 0.2px;
+            }
+            .meta {
+              color: var(--muted);
+              font-size: 12px;
+              line-height: 1.45;
+            }
+            .ticket-id {
+              font-size: 20px;
+              font-weight: 800;
+              margin: 8px 0 4px;
+            }
+            .line {
+              border-top: 1px dashed var(--line);
+              margin: 12px 0;
+            }
+            .item-row {
+              display: flex;
+              justify-content: space-between;
+              gap: 8px;
+              margin: 8px 0;
+            }
+            .item-name {
+              font-size: 15px;
+              font-weight: 700;
+              color: var(--ink);
+            }
+            .item-meta {
+              font-size: 12px;
+              color: var(--muted);
+              margin-top: 2px;
+            }
+            .item-price {
+              font-size: 15px;
+              font-weight: 700;
+              color: var(--ink);
+              white-space: nowrap;
+            }
+            .summary-row {
+              display: flex;
+              justify-content: space-between;
+              margin: 7px 0;
+              font-size: 15px;
+            }
+            .summary-label { color: var(--muted); }
+            .summary-value { font-weight: 700; color: var(--ink); }
+            .summary-total {
+              display: flex;
+              justify-content: space-between;
+              margin-top: 10px;
+              padding-top: 10px;
+              border-top: 1px solid var(--line);
+              font-size: 22px;
+              font-weight: 800;
+            }
+            .footer {
+              margin-top: 12px;
+              text-align: center;
+              font-size: 11px;
+              color: var(--muted);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="ticket">
+            <div class="brand">
+              <div class="brand-badge">GG</div>
+              <h2 class="brand-name">Green Grounds Coffee</h2>
+            </div>
+            <p class="ticket-id">Ticket ${order.ticketNumber}</p>
+            <p class="meta">${formatDateTime(order.createdAt)}</p>
+            <p class="meta">${order.orderType} • ${order.customerName}${order.table && order.table !== "-" ? ` • ${order.table}` : ""}</p>
+            <div class="line"></div>
+            ${itemsHtml}
+            <div class="line"></div>
+            <div class="summary-row"><span class="summary-label">Subtotal</span><span class="summary-value">$${order.subtotal.toFixed(2)}</span></div>
+            <div class="summary-row"><span class="summary-label">Tax</span><span class="summary-value">$${order.tax.toFixed(2)}</span></div>
+            <div class="summary-total"><span>Total</span><span>$${order.total.toFixed(2)}</span></div>
+            <p class="footer">Thank you for visiting Green Grounds Coffee</p>
+          </div>
+        </body>
+      </html>
+    `);
+    ticketWindow.document.close();
+    ticketWindow.focus();
+    ticketWindow.print();
+  };
+
   return (
     <div className="h-screen bg-cream-50 font-sans flex flex-col overflow-hidden">
       {/* ── Header ── */}
@@ -370,11 +612,11 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
         </div>
 
         <div className="flex items-center gap-5">
-          <span className="text-sm text-sage-600 hidden md:inline">
-            Total : <strong className="text-sage-900">20 Orders</strong>
-          </span>
-          <button className="flex items-center gap-1.5 bg-white border border-sage-200 rounded-xl px-3.5 py-2 text-sm font-medium text-sage-800 hover:bg-sage-50 transition-colors shadow-sm">
-            Report <FileText size={14} className="ml-1" />
+          <button
+            onClick={() => setHistoryOpen(true)}
+            className="text-sm text-sage-600 hidden md:inline px-3 py-2 rounded-xl border border-transparent hover:border-sage-200 hover:bg-white transition-colors"
+          >
+            Total : <strong className="text-sage-900">{orderHistory.length} Orders</strong>
           </button>
           <div className="relative cursor-pointer">
             <Bell size={20} className="text-sage-700" />
@@ -702,7 +944,11 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
                   </div>
                 </div>
 
-                <button className="w-full flex items-center justify-between bg-sage-800 hover:bg-sage-700 active:bg-sage-900 text-white rounded-2xl px-5 py-4 transition-colors shadow-md">
+                <button
+                  onClick={handlePlaceOrder}
+                  disabled={!cartItems.length}
+                  className="w-full flex items-center justify-between bg-sage-800 hover:bg-sage-700 active:bg-sage-900 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl px-5 py-4 transition-colors shadow-md"
+                >
                   <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                     <ChevronRight size={18} className="text-white" />
                   </div>
@@ -718,6 +964,170 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Orders History Modal ── */}
+      <AnimatePresence>
+        {historyOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/40 p-4 md:p-8"
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className="h-full max-h-[760px] mx-auto max-w-5xl bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-[320px,1fr]"
+            >
+              <div className="border-r border-sage-100 p-4 overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold text-sage-900">Orders History</h3>
+                  <button
+                    onClick={() => setHistoryOpen(false)}
+                    className="w-8 h-8 rounded-full border border-sage-200 flex items-center justify-center hover:bg-sage-50"
+                  >
+                    <X size={14} className="text-sage-600" />
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {orderHistory.map((order) => (
+                    <button
+                      key={order.id}
+                      onClick={() => setSelectedOrderId(order.id)}
+                      className={`w-full text-left rounded-2xl border p-3 transition-colors ${selectedOrderId === order.id ? "border-sage-500 bg-sage-50" : "border-sage-200 bg-white hover:bg-sage-50"}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="font-semibold text-sage-900">{order.ticketNumber}</p>
+                        <p className="text-sm font-bold text-sage-900">${order.total.toFixed(1)}</p>
+                      </div>
+                      <p className="text-xs text-sage-500 mt-1">{order.customerName} • {order.orderType}</p>
+                      <p className="text-xs text-sage-400 mt-0.5">{formatDateTime(order.createdAt)}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-5 md:p-6 overflow-y-auto">
+                {selectedOrder ? (
+                  <>
+                    <div className="flex items-start justify-between gap-3 mb-4">
+                      <div>
+                        <p className="text-sm text-sage-500">Command Ticket</p>
+                        <h3 className="text-2xl font-bold text-sage-900">{selectedOrder.ticketNumber}</h3>
+                      </div>
+                      <button
+                        onClick={() => printTicket(selectedOrder)}
+                        className="flex items-center gap-2 rounded-xl border border-sage-300 bg-white px-3 py-2 text-sm font-semibold text-sage-700 hover:bg-sage-50"
+                      >
+                        <Printer size={14} /> Print Ticket
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                      <div className="bg-white rounded-2xl border border-sage-200 p-3">
+                        <p className="text-xs text-sage-500">Customer</p>
+                        <p className="font-semibold text-sage-900">{selectedOrder.customerName}</p>
+                      </div>
+                      <div className="bg-white rounded-2xl border border-sage-200 p-3">
+                        <p className="text-xs text-sage-500">Type</p>
+                        <p className="font-semibold text-sage-900">{selectedOrder.orderType}</p>
+                      </div>
+                      <div className="bg-white rounded-2xl border border-sage-200 p-3">
+                        <p className="text-xs text-sage-500">Created</p>
+                        <p className="font-semibold text-sage-900 flex items-center gap-1.5">
+                          <CalendarClock size={13} className="text-sage-500" />
+                          {formatDateTime(selectedOrder.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl border border-sage-200 p-3 mb-4">
+                      <p className="text-sm font-semibold text-sage-900 mb-2">Items</p>
+                      <div className="space-y-2">
+                        {selectedOrder.items.map((item) => (
+                          <div key={`${selectedOrder.id}-${item.id}`} className="flex items-center justify-between text-sm">
+                            <div>
+                              <p className="font-medium text-sage-900">{item.name} x{item.qty}</p>
+                              <p className="text-xs text-sage-500">{item.customization}</p>
+                            </div>
+                            <p className="font-semibold text-sage-900">${(item.price * item.qty).toFixed(1)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl border border-sage-200 p-4">
+                      <div className="flex justify-between text-sm text-sage-600"><span>Subtotal</span><span>${selectedOrder.subtotal.toFixed(1)}</span></div>
+                      <div className="flex justify-between text-sm text-sage-600 mt-1"><span>Tax</span><span>${selectedOrder.tax.toFixed(1)}</span></div>
+                      <div className="flex justify-between text-base font-bold text-sage-900 mt-2 pt-2 border-t border-sage-100"><span>Total</span><span>${selectedOrder.total.toFixed(1)}</span></div>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sage-500">Select an order to view details.</p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Payment Ticket Modal ── */}
+      <AnimatePresence>
+        {ticketOpen && latestTicket && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/40 p-4 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className="w-full max-w-md bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl p-5"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-sm text-sage-500">Payment received</p>
+                  <h3 className="text-2xl font-bold text-sage-900">{latestTicket.ticketNumber}</h3>
+                </div>
+                <button
+                  onClick={() => setTicketOpen(false)}
+                  className="w-8 h-8 rounded-full border border-sage-200 flex items-center justify-center hover:bg-sage-50"
+                >
+                  <X size={14} className="text-sage-600" />
+                </button>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-sage-200 p-3 space-y-1 mb-4">
+                <div className="flex justify-between text-sm"><span className="text-sage-500">Customer</span><span className="font-medium text-sage-900">{latestTicket.customerName}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-sage-500">Type</span><span className="font-medium text-sage-900">{latestTicket.orderType}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-sage-500">Total paid</span><span className="font-bold text-sage-900">${latestTicket.total.toFixed(1)}</span></div>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => printTicket(latestTicket)}
+                  className="flex-1 rounded-xl border border-sage-300 bg-white px-3 py-2 text-sm font-semibold text-sage-700 hover:bg-sage-50"
+                >
+                  <span className="inline-flex items-center gap-1.5"><Printer size={14} /> Print Ticket</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedOrderId(latestTicket.id);
+                    setTicketOpen(false);
+                    setHistoryOpen(true);
+                  }}
+                  className="flex-1 rounded-xl bg-sage-800 px-3 py-2 text-sm font-semibold text-white hover:bg-sage-700"
+                >
+                  View Order
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
