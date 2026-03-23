@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProducts } from "./hooks/useProducts";
 import {
   Search,
   Bell,
@@ -20,11 +21,10 @@ import {
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const categories = [
+const INITIAL_CATEGORIES = [
   {
     id: "coffee",
     name: "Coffee",
-    items: 50,
     status: "Available",
     warning: false,
     image:
@@ -33,7 +33,6 @@ const categories = [
   {
     id: "tea",
     name: "Tea",
-    items: 20,
     status: "Available",
     warning: false,
     image:
@@ -42,7 +41,6 @@ const categories = [
   {
     id: "snack",
     name: "Snack",
-    items: 10,
     status: "Need to re-stock",
     warning: true,
     image:
@@ -50,244 +48,11 @@ const categories = [
   },
 ];
 
-const productsByCategory = {
-  coffee: [
-    {
-      id: "espresso",
-      name: "Espresso",
-      price: 4.2,
-      image:
-        "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "cappuccino",
-      name: "Cappuccino",
-      price: 3.3,
-      image:
-        "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "latte",
-      name: "Latte",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "americano",
-      name: "Americano",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "mocha",
-      name: "Mocha",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "iced-coffee",
-      name: "Iced Coffee Milk",
-      price: 3.8,
-      image:
-        "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "cold-brew",
-      name: "Cold Brew",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "flat-white",
-      name: "Flat White",
-      price: 3.8,
-      image:
-        "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "caramel-mac",
-      name: "Caramel Mac",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "salted-caramel",
-      name: "Salted Caramel",
-      price: 4.2,
-      image:
-        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "hazelnut-latte",
-      name: "Hazelnut Latte",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "pour-over",
-      name: "Pour Over",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=300&fit=crop&auto=format",
-    },
-  ],
-  tea: [
-    {
-      id: "green-jasmine",
-      name: "Green Jasmine Tea",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1556881286-fc6915169721?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "earl-grey",
-      name: "Earl Grey",
-      price: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "chamomile",
-      name: "Chamomile",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "peppermint",
-      name: "Peppermint Tea",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "rooibos",
-      name: "Rooibos Chai",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "hibiscus",
-      name: "Hibiscus Berry Tea",
-      price: 3.8,
-      image:
-        "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "darjeeling",
-      name: "Darjeeling",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "genmaicha",
-      name: "Genmaicha",
-      price: 3.8,
-      image:
-        "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "sencha",
-      name: "Sencha",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "white-peony",
-      name: "White Peony",
-      price: 4.2,
-      image:
-        "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "lemon-ginger",
-      name: "Lemon Ginger",
-      price: 3.5,
-      image:
-        "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "moroccan-mint",
-      name: "Moroccan Mint",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1563822249548-9a72b6353d08?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "lapsang",
-      name: "Lapsang Souchong",
-      price: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "dragon-well",
-      name: "Dragon Well",
-      price: 5.0,
-      image:
-        "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "lemongrass",
-      name: "Lemongrass Tea",
-      price: 3.5,
-      image:
-        "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=300&fit=crop&auto=format",
-    },
-  ],
-  snack: [
-    {
-      id: "croissant",
-      name: "Butter Croissant",
-      price: 3.5,
-      image:
-        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "muffin",
-      name: "Blueberry Muffin",
-      price: 3.0,
-      image:
-        "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "brownie",
-      name: "Chocolate Brownie",
-      price: 3.5,
-      image:
-        "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "cookie",
-      name: "Oat Raisin Cookie",
-      price: 2.5,
-      image:
-        "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "banana-bread",
-      name: "Banana Bread",
-      price: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=300&h=300&fit=crop&auto=format",
-    },
-    {
-      id: "granola-bar",
-      name: "Granola Bar",
-      price: 2.8,
-      image:
-        "https://images.unsplash.com/photo-1490567674331-8f0605bc5f53?w=300&h=300&fit=crop&auto=format",
-    },
-  ],
+// Initial mock static config (dynamically overwritten later)
+const INITIAL_PRODUCTS_BY_CATEGORY = {
+  coffee: [],
+  tea: [],
+  snack: [],
 };
 
 const TAX_RATE = 0.1;
@@ -363,6 +128,25 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
   const [latestTicket, setLatestTicket] = useState(null);
 
   const sidebarOpen = cartItems.length > 0;
+
+  const { products } = useProducts();
+
+  const productsByCategory = useMemo(() => {
+    const acc = { coffee: [], tea: [], snack: [] };
+    products.forEach((p) => {
+      const type = (p.category || "").toLowerCase();
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(p);
+    });
+    return acc;
+  }, [products]);
+
+  const categories = useMemo(() => {
+    return INITIAL_CATEGORIES.map(c => ({
+      ...c,
+      items: (productsByCategory[c.id] || []).length
+    }));
+  }, [productsByCategory]);
 
   const currentProducts = (productsByCategory[activeCategory] || []).filter(
     (p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -745,7 +529,7 @@ export default function POSDashboard({ onNavigate, onLogout, user }) {
                           {product.name}
                         </h4>
                         <p className="text-sm text-sage-500 mt-0.5">
-                          ${product.price.toFixed(1)}
+                          ${Number(product.price).toFixed(2)}
                         </p>
                       </div>
                       <button

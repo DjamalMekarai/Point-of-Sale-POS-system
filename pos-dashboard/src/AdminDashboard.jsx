@@ -29,6 +29,7 @@ import {
   TrendingDown,
   SlidersHorizontal,
   LayoutGrid,
+  Package,
 } from "lucide-react";
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
@@ -292,6 +293,13 @@ export default function AdminDashboard({ onNavigate, onLogout, user }) {
             <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
               1
             </span>
+          </div>
+          <div 
+            className="p-2 bg-white rounded-xl shadow-sm cursor-pointer hover:bg-sage-50 transition-colors border border-sage-200"
+            onClick={() => onNavigate("products")}
+            title="Manage Products & Stock"
+          >
+            <Package size={18} className="text-sage-700" />
           </div>
           <div className="flex items-center gap-2.5 bg-white border border-sage-200 rounded-2xl px-3 py-1.5 shadow-sm">
             <img
