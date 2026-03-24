@@ -7,14 +7,255 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Category ─────────────────────────────────────────────────────────────────
+model Category {
+  id           Int       @id @default(autoincrement())
+  name         String    @unique
+  nameAr       String?
+  icon         String?
+  color        String?
+  displayOrder Int       @default(0)
+  products     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+// ─── Product ──────────────────────────────────────────────────────────────────
 model Product {
-  id          Int      @id @default(autoincrement())
+  id              Int         @id @default(autoincrement())
+  name            String
+  nameAr          String?
+  nameFr          String?
+  description     String?
+  price           Float
+  categoryId      Int?
+  category        Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryName    String      @default("Uncategorized") // denormalized for quick access
+  stock           Int         @default(0)
+  image           String?
+  isAvailable     Boolean     @default(true)
+  preparationTime Int         @default(5)
+  calories        Int?
+  tags            String[]
+  displayOrder    Int         @default(0)
+  barcode         String?     @unique
+  modifiers       Json?
+  variants        Json?
+  orderItems      OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+// ─── Table ────────────────────────────────────────────────────────────────────
+model Table {
+  id        Int         @id @default(autoincrement())
+  number    String      @unique
+  zone      String      @default("Indoor")
+  capacity  Int         @default(4)
+  status    TableStatus @default(AVAILABLE)
+  posX      Float?
+  posY      Float?
+  orders    Order[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  CLEANING
+}
+
+// ─── Staff ────────────────────────────────────────────────────────────────────
+model Staff {
+  id          Int        @id @default(autoincrement())
   name        String
-  description String?
-  price       Float
-  category    String
-  stock       Int      @default(0)
-  image       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  email       String     @unique
+  phone       String?
+  role        StaffRole  @default(CASHIER)
+  pin         String?
+  avatar      String?
+  isActive    Boolean    @default(true)
+  hireDate    DateTime   @default(now())
+  permissions Json?
+  orders      Order[]
+  logs        ActivityLog[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum StaffRole {
+  ADMIN
+  MANAGER
+  CASHIER
+  BARISTA
+  WAITER
+  DELIVERY
+}
+
+// ─── Customer ─────────────────────────────────────────────────────────────────
+model Customer {
+  id            Int      @id @default(autoincrement())
+  name          String
+  phone         String   @unique
+  email         String?
+  birthdate     DateTime?
+  loyaltyPoints Int      @default(0)
+  loyaltyTier   String   @default("Bronze")
+  totalVisits   Int      @default(0)
+  totalSpent    Float    @default(0)
+  notes         String?
+  tags          String[]
+  firstVisit    DateTime @default(now())
+  lastVisit     DateTime @default(now())
+  orders        Order[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─── Discount ─────────────────────────────────────────────────────────────────
+model Discount {
+  id          Int          @id @default(autoincrement())
+  name        String
+  code        String?      @unique
+  type        DiscountType @default(PERCENTAGE)
+  value       Float
+  minOrder    Float?
+  maxUses     Int?
+  usedCount   Int          @default(0)
+  itemIds     Int[]
+  categoryIds Int[]
+  startTime   String?
+  endTime     String?
+  validDays   Int[]
+  expiresAt   DateTime?
+  isActive    Boolean      @default(true)
+  orders      Order[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_ITEM
+  BOGO
+}
+
+// ─── Order ────────────────────────────────────────────────────────────────────
+model Order {
+  id          Int         @id @default(autoincrement())
+  orderNumber String      @unique
+  type        OrderType   @default(DINE_IN)
+  status      OrderStatus @default(PENDING)
+  tableId     Int?
+  table       Table?      @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  staffId     Int?
+  staff       Staff?      @relation(fields: [staffId], references: [id], onDelete: SetNull)
+  customerId  Int?
+  customer    Customer?   @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  discountId  Int?
+  discount    Discount?   @relation(fields: [discountId], references: [id], onDelete: SetNull)
+  items       OrderItem[]
+  subtotal    Float       @default(0)
+  discountAmt Float       @default(0)
+  tax         Float       @default(0)
+  total       Float       @default(0)
+  isPriority  Boolean     @default(false)
+  notes       String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  READY
+  SERVED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+// ─── OrderItem ────────────────────────────────────────────────────────────────
+model OrderItem {
+  id        Int        @id @default(autoincrement())
+  orderId   Int
+  order     Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product    @relation(fields: [productId], references: [id])
+  quantity  Int
+  unitPrice Float
+  modifiers Json?
+  variant   String?
+  notes     String?
+  status    ItemStatus @default(PENDING)
+  createdAt DateTime   @default(now())
+}
+
+enum ItemStatus {
+  PENDING
+  IN_PROGRESS
+  READY
+  SERVED
+}
+
+// ─── Inventory ────────────────────────────────────────────────────────────────
+model InventoryItem {
+  id              Int          @id @default(autoincrement())
+  name            String
+  unit            String       @default("pieces")
+  currentStock    Float        @default(0)
+  minimumStock    Float        @default(5)
+  costPerUnit     Float        @default(0)
+  supplier        String?
+  category        String       @default("General")
+  lastRestockedAt DateTime?
+  expiryDate      DateTime?
+  restockLogs     RestockLog[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model RestockLog {
+  id        Int           @id @default(autoincrement())
+  itemId    Int
+  item      InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  quantity  Float
+  note      String?
+  createdAt DateTime      @default(now())
+}
+
+// ─── Activity Log ─────────────────────────────────────────────────────────────
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  staffId   Int
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+model Settings {
+  id             Int     @id @default(1)
+  cafeName       String  @default("Green Grounds Coffee")
+  logo           String?
+  address        String?
+  phone          String?
+  taxRate        Float   @default(19)
+  taxInclusive   Boolean @default(false)
+  currency       String  @default("DZD")
+  receiptHeader  String?
+  receiptFooter  String?
+  openingHours   Json?
+  updatedAt      DateTime @updatedAt
 }
