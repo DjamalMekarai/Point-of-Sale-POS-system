@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,10 +21,12 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [serverError, setServerError] = useState("");
 
-  // Redirect already-authenticated users
-  if (user) {
-    navigate(user.role === "admin" ? "/admin" : "/pos", { replace: true });
-  }
+  // Redirect already-authenticated users (must be in effect, not during render)
+  useEffect(() => {
+    if (user) {
+      navigate(user.role === "admin" ? "/admin" : "/pos", { replace: true });
+    }
+  }, [user, navigate]);
 
   const {
     register,
