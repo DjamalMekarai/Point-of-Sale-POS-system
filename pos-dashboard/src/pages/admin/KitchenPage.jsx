@@ -45,9 +45,9 @@ export default function KitchenPage() {
           </div>
           <div>
             <h1 className="text-lg font-black tracking-tight">KITCHEN DISPLAY</h1>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Live Orders ({activeOrders.length})
-            </p>
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-4">
