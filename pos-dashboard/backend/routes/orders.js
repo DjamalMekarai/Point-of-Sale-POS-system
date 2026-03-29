@@ -16,7 +16,14 @@ router.get('/', async (req, res) => {
   try {
     const { status, type, date, staffId, tableId, page = 1, limit = 50 } = req.query;
     const where = {};
-    if (status) where.status = status;
+
+    // `status` may arrive as a single string, comma-separated, or an array
+    if (status) {
+      const statuses = Array.isArray(status)
+        ? status
+        : status.split(',').map(s => s.trim()).filter(Boolean);
+      where.status = statuses.length === 1 ? statuses[0] : { in: statuses };
+    }
     if (type) where.type = type;
     if (staffId) where.staffId = parseInt(staffId);
     if (tableId) where.tableId = parseInt(tableId);
