@@ -3,19 +3,27 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import ProductImageUpload from "./ProductImageUpload";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const productSchema = z.object({
   name: z.string().min(2, "Name is required"),
   description: z.string().optional(),
   price: z.preprocess((val) => Number(val), z.number().min(0.01, "Price must be greater than 0")),
-  category: z.string().min(1, "Category is required"),
+  categoryName: z.string().min(1, "Category is required"),
   stock: z.preprocess((val) => Number(val), z.number().min(0, "Stock cannot be negative")),
-  // photo handled separately since it's a file
 });
 
 export default function ProductFormModal({ isOpen, onClose, onSubmit, isSubmitting, initialData = null }) {
   const isEditing = !!initialData;
+  const [categories, setCategories] = useState([]);
+
+  // Load categories dynamically from API
+  useEffect(() => {
+    fetch('/api/categories')
+      .then(r => r.json())
+      .then(data => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => setCategories([]));
+  }, []);
 
   const {
     register,
@@ -29,7 +37,7 @@ export default function ProductFormModal({ isOpen, onClose, onSubmit, isSubmitti
       name: "",
       description: "",
       price: "",
-      category: "",
+      categoryName: "",
       stock: "",
     },
   });
@@ -41,11 +49,11 @@ export default function ProductFormModal({ isOpen, onClose, onSubmit, isSubmitti
           name: initialData.name || "",
           description: initialData.description || "",
           price: initialData.price || "",
-          category: initialData.category || "",
+          categoryName: initialData.categoryName || initialData.category || "",
           stock: initialData.stock || 0,
         });
       } else {
-        reset({ name: "", description: "", price: "", category: "", stock: "" });
+        reset({ name: "", description: "", price: "", categoryName: "", stock: "" });
       }
     }
   }, [isOpen, initialData, reset]);
@@ -53,8 +61,7 @@ export default function ProductFormModal({ isOpen, onClose, onSubmit, isSubmitti
   if (!isOpen) return null;
 
   const handleFormSubmit = async (data) => {
-    // For react-hook-form managed image
-    data.photo = data.photoFile || initialData?.image || null; 
+    data.photo = data.photoFile || initialData?.image || null;
     await onSubmit(data);
   };
 
@@ -106,31 +113,30 @@ export default function ProductFormModal({ isOpen, onClose, onSubmit, isSubmitti
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {/* Category */}
+              {/* Category — loaded from /api/categories */}
               <div>
                 <label className="block text-sm font-semibold text-sage-800 mb-1">Category *</label>
                 <select
-                  {...register("category")}
-                  className={`w-full p-2.5 rounded-xl border ${errors.category ? "border-red-500" : "border-sage-200"} outline-none focus:border-sage-500 bg-white`}
+                  {...register("categoryName")}
+                  className={`w-full p-2.5 rounded-xl border ${errors.categoryName ? "border-red-500" : "border-sage-200"} outline-none focus:border-sage-500 bg-white`}
                 >
-                  <option value="">Select...</option>
-                  <option value="Coffee">Coffee</option>
-                  <option value="Tea">Tea</option>
-                  <option value="Snack">Snack</option>
-                  <option value="Merch">Merch</option>
+                  <option value="">Select category...</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                  ))}
                 </select>
-                {errors.category && <p className="text-sm text-red-500 mt-1">{errors.category.message}</p>}
+                {errors.categoryName && <p className="text-sm text-red-500 mt-1">{errors.categoryName.message}</p>}
               </div>
 
               {/* Price */}
               <div>
-                <label className="block text-sm font-semibold text-sage-800 mb-1">Price ($) *</label>
+                <label className="block text-sm font-semibold text-sage-800 mb-1">Price (DA) *</label>
                 <input
                   type="number"
-                  step="0.01"
+                  step="1"
                   {...register("price")}
                   className={`w-full p-2.5 rounded-xl border ${errors.price ? "border-red-500" : "border-sage-200"} outline-none focus:border-sage-500 bg-white`}
-                  placeholder="0.00"
+                  placeholder="0"
                 />
                 {errors.price && <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>}
               </div>
