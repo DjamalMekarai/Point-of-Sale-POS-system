@@ -20,10 +20,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
-const mapImg = (p) => ({
-  ...p,
-  image: p.image && p.image !== 'null' ? `${BASE_URL}/uploads/${p.image}` : null
-});
+
+function mapImg(p) {
+  if (!p.image || p.image === 'null') return { ...p, image: null };
+  // If it's already a full URL (e.g. Unsplash), leave it as-is
+  if (p.image.startsWith('http://') || p.image.startsWith('https://')) {
+    return p;
+  }
+  // Otherwise it's a local upload filename — prepend server URL
+  return { ...p, image: `${BASE_URL}/uploads/${p.image}` };
+}
+
 
 // GET /api/products
 router.get('/', async (req, res) => {

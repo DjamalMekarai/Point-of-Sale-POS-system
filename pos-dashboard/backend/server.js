@@ -26,8 +26,12 @@ app.use('/api/discounts',  require('./routes/discounts'));
 app.use('/api/reports',    require('./routes/reports'));
 app.use('/api/settings',   require('./routes/settings'));
 
+// Silence Chrome DevTools auto-discovery probe
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => res.json([]));
+
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
+
 
 // ─── Error handler ────────────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
